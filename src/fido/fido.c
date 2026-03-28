@@ -237,9 +237,10 @@ int load_keydev(uint8_t key[32]) {
             uint8_t format = *file_get_data(ef_keydev);
             if (format == 0x01 || format == 0x02) { // Format indicator
                 if (format == 0x02) {
+ uint8_t tmp_key[61], version = format == 0x03 ? 2 : 1;
                     uint8_t tmp_key[61];
                     memcpy(tmp_key, file_get_data(ef_keydev), sizeof(tmp_key));
-                    int ret = decrypt_with_aad(session_pin, tmp_key + 1, 60, key);
+                    int ret = decrypt_with_aad(session_pin, tmp_key + 1, 60,version, (uint8_t *)key);
                     if (ret != PICOKEY_OK) {
                         return PICOKEY_EXEC_ERROR;
                     }
